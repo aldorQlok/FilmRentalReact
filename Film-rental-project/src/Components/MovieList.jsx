@@ -1,4 +1,7 @@
 import axios from 'axios'
+
+import {getMovies, deleteMovie} from '../Services/MoviesService'
+
 import {useState, useEffect} from 'react'
 import MovieEdit from './MovieEdit'
 
@@ -7,23 +10,13 @@ export default function MovieList(){
     const [movieToEdit, setMovieToEdit] = useState(null)
 
     async function getMovieList(){
-        try{
-            const response = await axios.get('https://localhost:7127/api/Movies')
-            setMovies(response.data)
-            console.log(response.data)
-        } catch(error){
-            console.log("Error fetching Movies: ", error)
-        }
+        let moviesResponse = await getMovies();
+        setMovies(moviesResponse)
     }
 
     async function handleDelete(id){
-        try{
-
-            await axios.delete(`https://localhost:7127/api/Movies/deleteMovie/${id}`);
-            setMovies(movies.filter(m => m.id !== id))
-        } catch(error){
-            console.log(error);
-        }
+        await deleteMovie(id);
+        setMovies(movies.filter(m => m.id !== id))
     }
     
     function cancelEdit(){
